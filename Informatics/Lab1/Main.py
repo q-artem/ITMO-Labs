@@ -13,6 +13,9 @@ def t_input(b):
         if b == 1:
             if str(n).count("1") + str(n).count("0") != len(str(n)):
                 raise BaseException
+            if "11" in str(n):
+                print("Числи в фибоначчивой СС не может содержать две 1 рядом")
+                raise BaseException
         if b == 2:
             if n > 10+26+26:
                 raise BaseException
