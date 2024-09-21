@@ -87,8 +87,15 @@ cd ..
 # ====== Копирование файлов и создание ссылок ======
 
 ln -s volcarona5 Copy_49
-cp -R volcarona5 mamoswine0/mienfoo
+cp -R volcarona5 mamoswine0/mienfoo/volcarona5
 ln -s excadrill7 mamoswine0/vanilliteexcadrill
 cat cinccino6 > lillipup2/lileepcinccino
+ln excadrill7 mamoswine0/purrloinexcadrill
+cat lillipup2/lileep mamoswine0/glaceon > cinccino6_48
+cp cinccino6 volcarona5/shellder/cinccino6
+
+# ====== Поиск и фильтры ======
+
+
 
 pause
