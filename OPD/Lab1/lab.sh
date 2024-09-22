@@ -40,18 +40,25 @@ echo $"Тип покемона NORMAL" > cinccino6
 echo $"Тип диеты Herbivore" > excadrill7
 
 cd lillipup2
-echo $"Тип покемона ROCK\nGRASS" > lileep
+echo $"Тип покемона ROCK
+GRASS" > lileep
 echo $"Тип покемона ROCK BUG" > armaldo
-echo $"Живёт Forest\nGrassland" > patrat
-echo $"Способности Venom Stench Sticky\nHold" > trubbish
+echo $"Живёт Forest
+Grassland" > patrat
+echo $"Способности Venom Stench Sticky
+Hold" > trubbish
 cd ../mamoswine0
 
 echo $"satk=7 sdef=6 spd=5" > vanillite
-echo $"Тип покемона ICE\nNONE" > glaceon
-echo $"Способности Dark Art Limber\nUnburden" > purrloin
+echo $"Тип покемона ICE
+NONE" > glaceon
+echo $"Способности Dark Art Limber
+Unburden" > purrloin
 cd ../volcarona5
 
-echo $"Способности Supersonic Round Bubblebeam Mud Shot\nAqua Ring Uproar Muddy Water Rain Dance Acid Flail Drain Punch Echoed\nVoice Hydro Pump Hyper Voice" > seismitoad
+echo $"Способности Supersonic Round Bubblebeam Mud Shot
+Aqua Ring Uproar Muddy Water Rain Dance Acid Flail Drain Punch Echoed
+Voice Hydro Pump Hyper Voice" > seismitoad
 cd ..
 
 # ====== Установка прав ======
