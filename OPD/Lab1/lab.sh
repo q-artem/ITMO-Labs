@@ -112,7 +112,7 @@ wc -m *n */*n */*/*n | sort
 echo "---------2---------"
 ls *n */*n */*/*n -R -l -t 2>/dev/null
 echo "---------3---------"
-cat -b *o */*o */*/*o 2>/tmp/errors3 | sort
+cat -b *e */*e */*/*e 2>/tmp/errors3 | sort
 echo "---------4---------"
 cat s* */s* */*/s* 2>/tmp/errors4 | sort
 echo "---------5---------"
@@ -134,3 +134,8 @@ chmod -R u=rwx volcarona5
 rm -r volcarona5
 chmod -R u+w lillipup2
 rm -r lillipup2/quilava
+
+inode какая команда
+
+
+фио, группа, дата
