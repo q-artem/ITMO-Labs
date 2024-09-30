@@ -1,5 +1,6 @@
 # ====== Создание файлов ======
 
+echo "======================================== 1 ======================================="
 mkdir lab0
 
 cd lab0
@@ -35,35 +36,36 @@ cd ..
 
 # ====== Заполнение файлов ======
 
-echo $"Тип покемона WATER NONE" > blastoise4
-echo $"Тип покемона NORMAL" > cinccino6
-echo $"Тип диеты Herbivore" > excadrill7
+echo "======================================== 2 ======================================="
+echo "Тип покемона WATER NONE" > blastoise4
+echo "Тип покемона NORMAL" > cinccino6
+echo "Тип диеты Herbivore" > excadrill7
 
 cd lillipup2
-echo $"Тип покемона ROCK
+echo "Тип покемона ROCK
 GRASS" > lileep
-echo $"Тип покемона ROCK BUG" > armaldo
-echo $"Живёт Forest
+echo "Тип покемона ROCK BUG" > armaldo
+echo "Живёт Forest
 Grassland" > patrat
-echo $"Способности Venom Stench Sticky
+echo "Способности Venom Stench Sticky
 Hold" > trubbish
 cd ../mamoswine0
 
-echo $"satk=7 sdef=6 spd=5" > vanillite
-echo $"Тип покемона ICE
+echo "satk=7 sdef=6 spd=5" > vanillite
+echo "Тип покемона ICE
 NONE" > glaceon
-echo $"Способности Dark Art Limber
+echo "Способности Dark Art Limber
 Unburden" > purrloin
 cd ../volcarona5
 
-echo $"Способности Supersonic Round Bubblebeam Mud Shot
+echo "Способности Supersonic Round Bubblebeam Mud Shot
 Aqua Ring Uproar Muddy Water Rain Dance Acid Flail Drain Punch Echoed
 Voice Hydro Pump Hyper Voice" > seismitoad
 cd ..
 
 # ====== Установка прав ======
 
-
+echo "======================================== 3 ======================================="
 chmod 644 blastoise4
 chmod u=rw,g=,o=r cinccino6
 chmod u=rw,g=w,o=w excadrill7
@@ -93,6 +95,7 @@ cd ..
 
 # ====== Копирование файлов и создание ссылок ======
 
+echo "======================================== 4 ======================================="
 ln -s volcarona5 Copy_49
 cp -R volcarona5 mamoswine0/mienfoo/volcarona5
 ln -s excadrill7 mamoswine0/vanilliteexcadrill
@@ -103,6 +106,31 @@ cp cinccino6 volcarona5/shellder/cinccino6
 
 # ====== Поиск и фильтры ======
 
+echo "======================================== 5 ======================================="
+echo "---------1---------"
+wc -m *n */*n */*/*n | sort
+echo "---------2---------"
+ls *n */*n */*/*n -R -l -t 2>/dev/null
+echo "---------3---------"
+cat -b *o */*o */*/*o 2>/tmp/errors3 | sort
+echo "---------4---------"
+cat s* */s* */*/s* 2>/tmp/errors4 | sort
+echo "---------5---------"
+ls -l *e */*e */*/*e -t 2>/dev/null | head -n 4
+echo "---------6---------"
+chmod u+r mamoswine0
+ls mamoswine0 | sort
+chmod u-r mamoswine0
 
+# ====== Удаление файлов ======
 
-pause
+echo "======================================== 6 ======================================="
+rm excadrill7
+chmod u=rwx mamoswine0/glaceon
+rm mamoswine0/glaceon
+rm Copy_*
+rm mamoswine0/purrloinexcadri*
+chmod -R u=rwx volcarona5
+rm -r volcarona5
+chmod -R u+w lillipup2
+rm -r lillipup2/quilava
