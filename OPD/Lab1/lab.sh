@@ -134,8 +134,3 @@ chmod -R u=rwx volcarona5
 rm -r volcarona5
 chmod -R u+w lillipup2
 rm -r lillipup2/quilava
-
-inode какая команда
-
-
-фио, группа, дата
