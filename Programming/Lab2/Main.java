@@ -1,22 +1,22 @@
+import pokemons.Eelektross;
 import ru.ifmo.se.pokemon.*;
 import pokemons.*;
-import lib.*;
 
 public class Main {
     public static void main(String[] args) {
-        Battle b = new Battle();
-        Pokemon fp1 = new Igglybuff("Микрочел", 10);
-        Pokemon fp2 = new Jigglypuff("Дефолтчел", 7);
-        Pokemon fp3 = new Wigglytuff("Макрочел", 27);
-        b.addAlly(fp1);
-        b.addAlly(fp2);
-        b.addAlly(fp3);
-        Pokemon sp1 = new MimeJr("Бэбс", 10);
-        Pokemon sp2 = new MrMime("Папич", 27);
-        Pokemon sp3 = new Pheromosa("Неономи", 15);
-        b.addFoe(sp1);
-        b.addFoe(sp2);
-        b.addFoe(sp3);
-        b.go();
+        Battle battle = new Battle();
+        Pokemon red1 = new Basculin("Баскулин", 10);
+        Pokemon red2 = new Seel("Верёвка", 7);
+        Pokemon red3 = new Dewgong("Девгонг", 27);
+        battle.addAlly(red1);
+        battle.addAlly(red2);
+        battle.addAlly(red3);
+        Pokemon blue1 = new Tynamo("Тынамо", 10);
+        Pokemon blue2 = new Eelektrik("Электрик", 27);
+        Pokemon blue3 = new Eelektross("Электрон", 15);
+        battle.addFoe(blue1);
+        battle.addFoe(blue2);
+        battle.addFoe(blue3);
+        battle.go();
     }
 }
