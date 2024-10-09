@@ -1,6 +1,16 @@
 package attacks;
 
-import ru.ifmo.se.pokemon.Move;
+import ru.ifmo.se.pokemon.*;
 
-public class Scald extends Move {
+public class Scald extends SpecialMove {
+    public Scald() {
+        super(Type.WATER, 80, 100);
+    }
+
+
+
+    @Override
+    public String describe() {
+        return "применяет Scald";
+    }
 }
