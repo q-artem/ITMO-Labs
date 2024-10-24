@@ -1,3 +1,5 @@
+package src;
+
 import pokemons.Eelektross;
 import ru.ifmo.se.pokemon.*;
 import pokemons.*;
