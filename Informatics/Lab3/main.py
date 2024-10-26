@@ -1,27 +1,12 @@
-# isu: 467205
-# % 1 = 0
-# % 2 = 1
-# % 3 = 0
-# % 4 = 1
-# % 5 = 0
-# % 6 = 3
-# % 7 = 4
-# % 8 = 5
-# % 9 = 6
-
-# Смайлик: :</
-
 import re
-from os.path import split
-from pprint import pprint
 
 
-def task_1():
+def task_1():  # Смайлик: :</
     from tests_1 import tests, answers, num_tests
 
     print("#################################### Задание 1: ####################################")
     for q in range(num_tests):
-        print(f"------------------------------------- Тест {q+1}: --------------------------------------")
+        print(f"------------------------------------- Тест {q + 1}: --------------------------------------")
         print("> Входные данные:", tests[q][:500] + " ..." if len(tests[q]) > 500 else tests[q])
         ans = len(re.findall(r":</", tests[q]))
         if ans == answers[q]:
@@ -31,13 +16,12 @@ def task_1():
     return True
 
 
-
 def task_2():  # вариант 3
     from tests_2 import tests, answers, num_tests
 
     print("#################################### Задание 2: ####################################")
     for q in range(num_tests):
-        print(f"------------------------------------- Тест {q+1}: --------------------------------------")
+        print(f"------------------------------------- Тест {q + 1}: --------------------------------------")
         print("> Входные данные:", tests[q][:500] + " ..." if len(tests[q]) > 500 else tests[q])
         ans = sorted([q[:-5] for q in re.findall(r"\b[А-Я][\w|-]*\s[А-Я]\.[А-Я]\.", tests[q])])
         if ans == answers[q]:
