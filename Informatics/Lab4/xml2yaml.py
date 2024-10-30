@@ -39,6 +39,33 @@ def main():
     out = out[list(out.keys())[0]]
     pprint.pprint(out, width=200)
 
+    file = open("output.yaml", "w", encoding="utf-8")
+    curr_spase = 0
+    write_to_yaml(file, out, curr_spase, False)
+    file.close()
+
+def write_to_yaml(file, out, curr_spase, arrow_before_first):
+    last_header = ""
+    for q in out.keys():
+        st = " " * curr_spase + q + ":"
+        lst_attr = []
+        if " " in q:
+            st = " " * curr_spase + q.split(" ")[0] + ":"
+            lst_attr = q.split(" ")[1:]
+        if type(out[q]) != dict:
+            st += " '" + out[q] + "'\n"
+            if arrow_before_first:
+                arrow_before_first = False
+                st = st[:curr_spase - 2] + "-" + st[curr_spase - 1:]
+            file.write(st)
+        else:
+            st += "\n"
+            if last_header != st:
+                file.write(st)
+            last_header = st
+            for w in lst_attr:
+                out[q]["_" + w.split("=")[0]] = w.split("=")[1][1:-1]
+            write_to_yaml(file, out[q], curr_spase + 2, True if len(out.keys()) > 1 else False)
 
 def add_dict(out, stack):
     if len(stack) > 1:

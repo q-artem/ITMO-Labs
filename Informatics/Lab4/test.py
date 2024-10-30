@@ -15,3 +15,9 @@ f(d)
 print(d)
 
 print("dasd".split(" "))
+
+file = open("output.yaml", "w", encoding="utf-8")
+file.write("234234")
+file.write("234234\n")
+file.write("234234")
+file.close()
