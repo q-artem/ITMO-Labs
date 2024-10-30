@@ -1,9 +1,8 @@
 import pprint
 
-FILENAME = "input.xml"
 
 def main():
-    f = open(FILENAME, encoding="utf-8")
+    f = open("input.xml", encoding="utf-8")
     data = f.read()
     f.close()
     out = dict()

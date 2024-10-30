@@ -1,23 +1,27 @@
 
 
+def select_task():
+    try:
+        n = input(">>> Выберите задание 0-5 (0 - обязательное задание, 1-5 - дополнительные), или нажмите Enter для выхода: ")
+        if n == "":
+            exit()
+        n = int(n)
+        if -1 > n > 5:
+            raise Exception
+    except Exception:
+        print(">>> Плохое число, попробуйте ещё раз")
+        n = select_task()
+    return n
 
-def f(h):
-    h["sd"] = 7
 
-d = dict()
+def main():
+    tasks = ["xml2yaml.py", "dop1.py", "dop2.py", "dop3.py", "dop4.py", "dop5.py"]
+    while 1:
+        n = select_task()
+        try:
+            exec(open(tasks[n]).read())
+        except BaseException as e:
+            print(">>> Произошла ошибка, попробуйте ещё раз. Код ошибки:", e)
 
-d["sd"] = dict()
-d["sd"]["ada"] = 4
-
-print(d)
-
-f(d)
-print(d)
-
-print("dasd".split(" "))
-
-file = open("output.yaml", "w", encoding="utf-8")
-file.write("234234")
-file.write("234234\n")
-file.write("234234")
-file.close()
+if __name__ == "__main__":
+    main()
