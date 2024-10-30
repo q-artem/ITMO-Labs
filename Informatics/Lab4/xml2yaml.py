@@ -39,6 +39,7 @@ def main():
     out = out[list(out.keys())[0]]
     pprint.pprint(out, width=200)
 
+
 def add_dict(out, stack):
     if len(stack) > 1:
         add_dict(out[stack.pop(0)], stack)
