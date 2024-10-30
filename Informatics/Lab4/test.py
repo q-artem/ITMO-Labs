@@ -19,7 +19,8 @@ def main():
     while 1:
         n = select_task()
         try:
-            exec(open(tasks[n]).read())
+            from xml2yaml import XmlToYaml
+            XmlToYaml().main()
         except BaseException as e:
             print(">>> Произошла ошибка, попробуйте ещё раз. Код ошибки:", e)
 
