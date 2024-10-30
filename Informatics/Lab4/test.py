@@ -13,5 +13,5 @@ print(d)
 
 f(d)
 print(d)
-
+d["45"]
 print("dasd".split(" "))
