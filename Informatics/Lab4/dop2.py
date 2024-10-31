@@ -22,7 +22,7 @@ class XmlToYamlRegEx:
         curr_spase = 0
         self.write_to_yaml(file, res, curr_spase, False)
         file.close()
-        print("Изменения успешно записаны в файл outputDop2.yaml")
+        return "Изменения успешно записаны в файл outputDop2.yaml"
 
     def rec_add(self, res: dict, headers: list[list[str | int]], start_on: int) -> None:
         if not headers: return
@@ -66,4 +66,4 @@ class XmlToYamlRegEx:
 
 
 if __name__ == "__main__":
-    XmlToYamlRegEx().main()
+    print(XmlToYamlRegEx().main())

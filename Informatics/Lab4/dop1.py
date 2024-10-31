@@ -11,8 +11,8 @@ class XmlToYamlLib:
         f = open("outputDop1.yaml", "w", encoding="utf-8")
         f.write(yaml.dump(data_dict, default_flow_style=False, allow_unicode=True))
         f.close()
-        print("Изменения успешно записаны в файл outputDop1.yaml")
+        return "Изменения успешно записаны в файл outputDop1.yaml"
 
 
 if __name__ == "__main__":
-    XmlToYamlLib().main()
+    print(XmlToYamlLib().main())
