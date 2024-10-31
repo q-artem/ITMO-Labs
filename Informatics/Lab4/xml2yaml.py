@@ -37,12 +37,13 @@ class XmlToYaml:
                 else:
                     stack[-1] = stack[-1] + curr_symbol
         out = out[list(out.keys())[0]]
-        pprint.pprint(out, width=200)
+        # pprint.pprint(out, width=200)
 
-        file = open("output.yaml", "w", encoding="utf-8")
+        file = open("outputTask.yaml", "w", encoding="utf-8")
         curr_spase = 0
         self.write_to_yaml(file, out, curr_spase, False)
         file.close()
+        print("Изменения успешно записаны в файл outputTask.yaml")
 
     def write_to_yaml(self, file, out, curr_spase, arrow_before_first):
         last_header = ""
@@ -82,3 +83,4 @@ class XmlToYaml:
 
 if __name__ == "__main__":
     XmlToYaml().main()
+    print("Данные в формате YAML записаны в файл output.yaml")
