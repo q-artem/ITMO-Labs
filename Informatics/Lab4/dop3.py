@@ -29,7 +29,6 @@ class XmlToYamlFull:
             if headers[q][0][:2] == "</" and headers[q][0][2:] == headers[q - 1][0][1:]:
                 headers[q - 1][2] = data[headers[q - 1][1] + len(headers[q - 1][0]):headers[q][1]]
         headers.pop(0)
-        print(headers)
 
     def rec_add(self, res: dict, headers: list[list[str | int]], start_on: int) -> None:
         if not headers: return

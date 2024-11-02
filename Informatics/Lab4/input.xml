@@ -10,7 +10,7 @@
                 <Type>Лабораторная</Type>
                 <Classroom>2112</Classroom>
                 <Address>Кронверкский пр., д.49, лит.А</Address>
-            </Lesson> <!-- Это комментарий -->
+            </Lesson>
             <Lesson Time="10:00">
                 <Lector>Цю Тяньшэн</Lector>
                 <Theme>Основы профессиональной деятельности</Theme>
