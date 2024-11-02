@@ -12,6 +12,7 @@ class XmlToYamlFull:
         self.parse_headers(headers, data)  # парсим теги
         self.rec_add(res, headers, 0)  # рекурсивно формируем словарь
         self.group_equal_tags(res, [])  # группируем одинаковые теги и выносим их атрибуты
+        print(res)
         if debug: pprint.pprint(res, width=200)
 
         file = open("outputDop3.yaml", "w", encoding="utf-8")
@@ -25,6 +26,9 @@ class XmlToYamlFull:
         for q in re.finditer(r"<[^>]+>", data):  # ищем все теги по регулярке
             headers.append([q[0], q.start(), ""])
             if re.fullmatch(r"<!--[^>]+-->", headers[-1][0]): headers.pop(-1)  # удаляем <!-- комментарии -->
+            if headers[-1][0][-2:] == "/>":
+                headers[-1][0] = headers[-1][0][:-2] + ">"  # случай, когда тег пустой, делаем ещё один фиктивный
+                headers.append(["</" + headers[-1][0].split(" ")[0][1:] + ">", headers[-1][1], headers[-1][2]])
         for q in range(len(headers)):  # пишем текстовые данные там, где они есть
             if headers[q][0][:2] == "</" and headers[q][0][2:] == headers[q - 1][0][1:]:
                 headers[q - 1][2] = data[headers[q - 1][1] + len(headers[q - 1][0]):headers[q][1]]
@@ -36,9 +40,11 @@ class XmlToYamlFull:
         curr = headers[start_on]
         curr_name = curr[0][1:-1]
         if curr[2]:
-            res[curr_name] = self.replace_entities(curr[2])  # заменяем сущности и пишем, если строка не пустая
-        else:
-            res[curr_name] = dict()  # создаём словарь если пустая строка
+            if curr_name in res.keys():
+                if type(res[curr_name]) == list: res[curr_name].append(self.replace_entities(curr[2])) # заменяем сущ.
+                else: res[curr_name] = [res[curr_name], self.replace_entities(curr[2])] # и пишем, если строка не пустая
+            else: res[curr_name] = self.replace_entities(curr[2])
+        else: res[curr_name] = dict()  # создаём словарь если пустая строка
         end_ind = len(headers)
         for q in range(start_on, len(headers)):
             if headers[q][0][2:-1] == curr[0][1:-1].split(" ")[0]:  # если два соседних тега, записываем
@@ -61,7 +67,7 @@ class XmlToYamlFull:
         for q in list(res.keys()):  # идём по ключам
             link = res[q]  # ссылочка на словарь
             if " " in q:  # если есть атрибуты
-                nm, prop = q.split(" ")[0], q.split(" ")[1:]  # сплитим
+                nm, prop = q.split(" ")[0], [w[0][1:] for w in re.finditer(r'\s[^\n<"]+="[^\n<"]*"', q)]
                 if nm in res.keys(): res[nm].append(res[q])  # добавляем в список
                 else: res[nm] = [res[q]]
                 del res[q]  # удалили
@@ -88,7 +94,8 @@ class XmlToYamlFull:
                 st += "\n"  #           каждый раз взводя флаг добавления стрелочки
                 file.write(st)
                 for w in out[q]:
-                    self.write_to_yaml(file, w, curr_spase + 2, True)
+                    if type(w) == str: file.write(" " * (curr_spase + 2) + "- " + w + "\n")
+                    else: self.write_to_yaml(file, w, curr_spase + 2, True)
 
 
 if __name__ == "__main__":
