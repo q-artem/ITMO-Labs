@@ -18,10 +18,11 @@ def select_task():
 from xml2yaml import XmlToYaml
 from dop1 import XmlToYamlLib
 from dop2 import XmlToYamlRegEx
+from Informatics.Lab4.dop3 import XmlToYamlFull
 
 def main():
     print(r"{:-^110}".format(" Lab4UI "))
-    tasks = [XmlToYaml, XmlToYamlLib, XmlToYamlRegEx, "dop3.py", "dop4.py", "dop5.py"]
+    tasks = [XmlToYaml, XmlToYamlLib, XmlToYamlRegEx, XmlToYamlFull, "dop4.py", "dop5.py"]
     while 1:
         n = select_task()
         try:

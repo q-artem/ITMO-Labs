@@ -2,7 +2,7 @@ import pprint
 
 
 class XmlToYaml:
-    def main(self):
+    def main(self, debug=False):
         f = open("input.xml", encoding="utf-8")
         data = f.read()
         f.close()
@@ -37,7 +37,7 @@ class XmlToYaml:
                 else:
                     stack[-1] = stack[-1] + curr_symbol
         out = out[list(out.keys())[0]]
-        # pprint.pprint(out, width=200)
+        if debug: pprint.pprint(out, width=200)
 
         file = open("outputTask.yaml", "w", encoding="utf-8")
         curr_spase = 0
@@ -82,4 +82,4 @@ class XmlToYaml:
 
 
 if __name__ == "__main__":
-    print(XmlToYaml().main())
+    print(XmlToYaml().main(True))

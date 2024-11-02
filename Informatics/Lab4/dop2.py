@@ -1,9 +1,9 @@
-# import pprint
+import pprint
 import re
 
 
 class XmlToYamlRegEx:
-    def main(self):
+    def main(self, debug=False):
         f = open("input.xml", encoding="utf-8")
         data = f.read()
         f.close()
@@ -16,7 +16,7 @@ class XmlToYamlRegEx:
         headers.pop(0)
         res = dict()
         self.rec_add(res, headers, 0)
-        # pprint.pprint(res, width=200)
+        if debug: pprint.pprint(res, width=200)
 
         file = open("outputDop2.yaml", "w", encoding="utf-8")
         curr_spase = 0
@@ -66,4 +66,4 @@ class XmlToYamlRegEx:
 
 
 if __name__ == "__main__":
-    print(XmlToYamlRegEx().main())
+    print(XmlToYamlRegEx().main(True))

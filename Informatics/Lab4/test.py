@@ -18,3 +18,8 @@ print("dasd".split(" "))
 
 f = [3,3,5,1,3,4,32,2,3,4,5]
 print(f.index(4))
+
+f = {1:5}
+g = f
+g[5] = 7
+print(f, g)
