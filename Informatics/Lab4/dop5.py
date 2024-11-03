@@ -2,7 +2,7 @@ import pprint
 import re
 
 
-class XmlToYamlFull:
+class XmlToMarkdown:
     def main(self, debug=False):
         file = open("input.xml", encoding="utf-8")
         data = file.read()
@@ -14,11 +14,11 @@ class XmlToYamlFull:
         self.group_equal_tags(res, [])  # группируем одинаковые теги и выносим их атрибуты
         if debug: pprint.pprint(res, width=200)
 
-        file = open("outputDop3.yaml", "w", encoding="utf-8")
+        file = open("outputDop5.md", "w", encoding="utf-8")
         curr_spase = 0
-        self.write_to_yaml(file, res, curr_spase, False)  # пишем в yaml
+        self.write_to_md(file, res, curr_spase, False)  # пишем в yaml
         file.close()
-        return "Изменения успешно записаны в файл outputDop3.yaml"
+        return "Изменения успешно записаны в файл outputDop5.md"
 
     @staticmethod
     def parse_headers(headers, data):
@@ -76,26 +76,26 @@ class XmlToYamlFull:
                 add_fields = []
             self.group_equal_tags(link, add_fields)
 
-    def write_to_yaml(self, file, out, curr_spase, arrow_before_first):  # рекурсивная запись
+    def write_to_md(self, file, out, curr_spase, arrow_before_first):  # рекурсивная запись
         for q in out.keys():  # идём по ключам
-            st = " " * curr_spase + q + ":"  # текущий тег
+            st = "\t" * curr_spase + "- " + q + ":"  # текущий тег
             if type(out[q]) == str:  # если попалась строка => просто текстовое поле
-                st += " '" + out[q] + "'\n"  # пишем его
                 if arrow_before_first:
                     arrow_before_first = False  # если с прошлого шага пришла необходимость стрелочки - добавляем
-                    st = st[:curr_spase - 2] + "-" + st[curr_spase - 1:]
+                    st = st[:curr_spase + 3 - 1] + "**" + st[curr_spase + 3 - 1:] + "**"
+                st += " " + out[q] + "\n"  # пишем его
                 file.write(st)
             if type(out[q]) == dict:  # если попался словарь => печатаем тег, переводим строку и идём глубже
                 st += "\n"
                 file.write(st) #   файл|словарь|добавили пробел | стрелка если несколько элементов
-                self.write_to_yaml(file, out[q], curr_spase + 2, True if len(out.keys()) > 1 else False)
+                self.write_to_md(file, out[q], curr_spase + 1, True if len(out.keys()) > 1 else False)
             if type(out[q]) == list:  # если попался список => печатаем тег, переводим строку и идём по элементам,
                 st += "\n"  #           каждый раз взводя флаг добавления стрелочки
                 file.write(st)
                 for w in out[q]:
-                    if type(w) == str: file.write(" " * (curr_spase + 2) + "- " + w + "\n")
-                    else: self.write_to_yaml(file, w, curr_spase + 2, True)
+                    if type(w) == str: file.write(" " * (curr_spase + 1) + "- " + w + "\n")
+                    else: self.write_to_md(file, w, curr_spase + 1, True)
 
 
 if __name__ == "__main__":
-    print(XmlToYamlFull().main(True))
+    print(XmlToMarkdown().main(True))
