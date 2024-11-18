@@ -16,7 +16,7 @@ public class Scald extends SpecialMove {
         Random random = new Random();
         if (random.nextFloat(0, 1) < 30) {
             if (!(opp.hasType(Type.FIRE) || opp.hasType(Type.WATER))) {
-                opp.setMod(Stat.HP, 0);
+                opp.setMod(Stat.HP, (int)opp.getStat(Stat.HP));
             }
         }
         opp.setMod(Stat.SPECIAL_DEFENSE, -2);

@@ -10,6 +10,6 @@ public class Rest extends PhysicalMove {
     @Override
     public void applySelfEffects(Pokemon att) {
         Effect.sleep(att);
-        att.setMod(Stat.HP, 100);
+        att.setMod(Stat.HP, -(int)att.getStat(Stat.HP));
     }
 }
