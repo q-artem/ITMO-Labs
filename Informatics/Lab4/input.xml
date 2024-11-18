@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Timetable>
+    <User>Пшеничников Артём Дмитриевич</User>
+    <UserISU>467205</UserISU>
+    <Week>
+        <Monday>
+            <Lesson Time="08:20">
+                <Lector>Цю Тяньшэн</Lector>
+                <Theme>Основы профессиональной деятельности</Theme>
+                <Type>Лабораторная</Type>
+                <Classroom>2112</Classroom>
+                <Address>Кронверкский пр., д.49, лит.А</Address>
+            </Lesson>
+            <Lesson Time="10:00">
+                <Lector>Цю Тяньшэн</Lector>
+                <Theme>Основы профессиональной деятельности</Theme>
+                <Type>Лабораторная</Type>
+                <Classroom>2112</Classroom>
+                <Address>Кронверкский пр., д.49, лит.А</Address>
+            </Lesson>
+            <Lesson Time="15:20">
+                <Lector>Карпов Дмитрий Валерьевич</Lector>
+                <Theme>Линейная алгебра (продвинутый уровень)</Theme>
+                <Type>Лекция</Type>
+                <Classroom>1404</Classroom>
+                <Address>Кронверкский пр., д.49, лит.А</Address>
+            </Lesson>
+            <Lesson Time="17:00">
+                <Lector>Покидова Марина Владимировна</Lector>
+                <Theme>Линейная алгебра (продвинутый уровень)</Theme>
+                <Type>Практика</Type>
+                <Classroom>2426</Classroom>
+                <Address>Кронверкский пр., д.49, лит.А</Address>
+            </Lesson>
+            <Lesson Time="19:00">
+                <Lector>Рекин Владимир Захарович</Lector>
+                <Theme>Шашки</Theme>
+                <Type>Спорт</Type>
+                <Classroom>Бильярдный клуб (1784)</Classroom>
+                <Address>Вяземский пер., д.5-7, лит.А</Address>
+            </Lesson>
+        </Monday>
+        <Thursday>
+            <Lesson Time="11:40">
+                <Lector>Щеглова Иванна Павловна</Lector>
+                <Theme>История русской культуры в контексте мировой культуры</Theme>
+                <Type>Практика</Type>
+                <Classroom>2412</Classroom>
+                <Address>Кронверкский пр., д.49, лит.А</Address>
+            </Lesson>
+            <Lesson Time="13:30">
+                <Lector>Жиркова Галина Петровна</Lector>
+                <Theme>История русской культуры в контексте мировой культуры</Theme>
+                <Type>Лекция</Type>
+                <Classroom>1405</Classroom>
+                <Address>Кронверкский пр., д.49, лит.А</Address>
+            </Lesson>
+        </Thursday>
+    </Week>
+</Timetable>
