@@ -9,8 +9,11 @@ class XmlToYamlFull:
         file.close()
         headers = []
         res = dict()
+        data = self.del_spaces(data)  # удаляем лишние пробелы
+        print(data)
         self.parse_headers(headers, data)  # парсим теги
         self.rec_add(res, headers, 0)  # рекурсивно формируем словарь
+        print(res)
         self.group_equal_tags(res, [])  # группируем одинаковые теги и выносим их атрибуты
         if debug: pprint.pprint(res, width=200)
 
@@ -20,14 +23,33 @@ class XmlToYamlFull:
         file.close()
         return "Изменения успешно записаны в файл outputDop3.yaml"
 
+    def del_spaces(self, data):
+        cp = ""
+        last = ""
+        in_tag = False
+        for q in range(len(data)):
+            if data[q] == "<":
+                in_tag = True
+            if in_tag:
+                if last == data[q] == " ":
+                    continue
+                if data[q] == "/" and data[q + 1] == ">":
+                    cp = cp[:-1]
+                last = data[q]
+                if data[q] == ">":
+                    in_tag = False
+            cp += data[q]
+        return cp
+
     @staticmethod
     def parse_headers(headers, data):
         for q in re.finditer(r"<[^>]+>", data):  # ищем все теги по регулярке
-            headers.append([q[0], q.start(), ""])
+            headers.append([q[0], q.start(), "<>"])
             if re.fullmatch(r"<!--[^>]+-->", headers[-1][0]): headers.pop(-1)  # удаляем <!-- комментарии -->
             if headers[-1][0][-2:] == "/>":
                 headers[-1][0] = headers[-1][0][:-2] + ">"  # случай, когда тег пустой, делаем ещё один фиктивный
-                headers.append(["</" + headers[-1][0].split(" ")[0][1:] + ">", headers[-1][1], headers[-1][2]])
+                headers.append(["</" + headers[-1][0].split(" ")[0].split(">")[0][1:] + ">", headers[-1][1], headers[-1][2]])
+        print(headers)
         for q in range(len(headers)):  # пишем текстовые данные там, где они есть
             if headers[q][0][:2] == "</" and headers[q][0][2:] == headers[q - 1][0][1:]:
                 headers[q - 1][2] = data[headers[q - 1][1] + len(headers[q - 1][0]):headers[q][1]]
@@ -38,7 +60,7 @@ class XmlToYamlFull:
         if start_on > len(headers) - 1: return  # завершение рекурсии
         curr = headers[start_on]
         curr_name = curr[0][1:-1]
-        if curr[2]:
+        if curr[2] != "<>":
             if curr_name in res.keys():
                 if type(res[curr_name]) == list: res[curr_name].append(self.replace_entities(curr[2])) # заменяем сущ.
                 else: res[curr_name] = [res[curr_name], self.replace_entities(curr[2])] # и пишем, если строка не пустая
@@ -47,14 +69,14 @@ class XmlToYamlFull:
         end_ind = len(headers)
         for q in range(start_on, len(headers)):
             if headers[q][0][2:-1] == curr[0][1:-1].split(" ")[0]:  # если два соседних тега, записываем
-                end_ind = q  #                                        стартовую позицию и передаём дальше
+                end_ind = q  # стартовую позицию и передаём дальше
                 break
         self.rec_add(res[curr_name], headers[start_on + 1:end_ind], 0)  # рекурсия вглубь
-        self.rec_add(res, headers, end_ind + 1)  #                                и вбок
+        self.rec_add(res, headers, end_ind + 1)  # и вбок
 
     @staticmethod
     def replace_entities(s):
-        for q in [["&lt;", '<'], ["&gt;", '>'], ["&amp;", '&'], ["&apos;", "'"], ["&quot;", '"']]:
+        for q in [["&lt;", '<'], ["&gt;", '>'], ["&amp;", '&'], ["&apos;", "'"], ["&quot;", '"'], ["<>", '""']]:
             s = s.replace(q[0], q[1])  # замена сущностей
         return s
 
@@ -72,7 +94,7 @@ class XmlToYamlFull:
                 del res[q]  # удалили
                 link = res[nm][-1]  # перезаписали ссылку
                 add_fields = [["_" + w[:w.index("=")], w[w.index("=") + 1:][1:-1]] for w in prop]  # добавление полей
-            else:  #                                                                                 для след. шага
+            else:  # для след. шага
                 add_fields = []
             self.group_equal_tags(link, add_fields)
 
@@ -87,10 +109,10 @@ class XmlToYamlFull:
                 file.write(st)
             if type(out[q]) == dict:  # если попался словарь => печатаем тег, переводим строку и идём глубже
                 st += "\n"
-                file.write(st) #   файл|словарь|добавили пробел | стрелка если несколько элементов
+                file.write(st)  # файл|словарь|добавили пробел | стрелка если несколько элементов
                 self.write_to_yaml(file, out[q], curr_spase + 2, True if len(out.keys()) > 1 else False)
             if type(out[q]) == list:  # если попался список => печатаем тег, переводим строку и идём по элементам,
-                st += "\n"  #           каждый раз взводя флаг добавления стрелочки
+                st += "\n"  # каждый раз взводя флаг добавления стрелочки
                 file.write(st)
                 for w in out[q]:
                     if type(w) == str: file.write(" " * (curr_spase + 2) + "- " + w + "\n")
