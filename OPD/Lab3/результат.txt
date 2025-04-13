@@ -1,0 +1,1 @@
+03FE a 0413 w A000 w E000 w E000 w AF40 w 0680 w 0500 w EEFB w AF05 w EEF8 w AEF5 w EEF5 w AAF4 w F204 w F003 w 7EF3 w F801 w EEF1 w 8400 w CEF8 w 0100 w 040B w 0C00 w F600 w 0380 w 0C00 w 0402 a s c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c c 
