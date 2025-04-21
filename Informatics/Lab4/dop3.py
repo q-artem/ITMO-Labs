@@ -10,10 +10,10 @@ class XmlToYamlFull:
         headers = []
         res = dict()
         data = self.del_spaces(data)  # удаляем лишние пробелы
-        print(data)
+        # print(data)
         self.parse_headers(headers, data)  # парсим теги
         self.rec_add(res, headers, 0)  # рекурсивно формируем словарь
-        print(res)
+        # print(res)
         self.group_equal_tags(res, [])  # группируем одинаковые теги и выносим их атрибуты
         if debug: pprint.pprint(res, width=200)
 
@@ -49,7 +49,7 @@ class XmlToYamlFull:
             if headers[-1][0][-2:] == "/>":
                 headers[-1][0] = headers[-1][0][:-2] + ">"  # случай, когда тег пустой, делаем ещё один фиктивный
                 headers.append(["</" + headers[-1][0].split(" ")[0].split(">")[0][1:] + ">", headers[-1][1], headers[-1][2]])
-        print(headers)
+        # print(headers)
         for q in range(len(headers)):  # пишем текстовые данные там, где они есть
             if headers[q][0][:2] == "</" and headers[q][0][2:] == headers[q - 1][0][1:]:
                 headers[q - 1][2] = data[headers[q - 1][1] + len(headers[q - 1][0]):headers[q][1]]
