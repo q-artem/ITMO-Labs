@@ -1,0 +1,3 @@
+018 a F200 w 4021 w 1022 w 3024 w F200 w 4023 w 4024 w 3024 w F000 w
+DEAD w BEEF w ACDC w 018 a s
+c c c c c c c c c
