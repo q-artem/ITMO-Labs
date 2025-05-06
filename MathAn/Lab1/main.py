@@ -27,13 +27,23 @@ def rectangles(func: Callable[[float], float], start: float, end: float, n: int)
 def trapezia(func: Callable[[float], float], start: float, end: float, n: int) -> float:
     h = (end - start) / n
 
-    step = (end - start) / (n + 1 - 1)
-    x = [start + i * step for i in range(n + 1)]
+    x = [start + i * h for i in range(n + 1)]
 
     integral = h / 2 * (func(x[0]) + 2 * sum([func(q) for q in x[1:-1]]) + func(x[-1]))
     return integral
+'''
+ld trapez(ld l, ld r, int n) {
+    const ld h = (r-l)/n;
+    ld res = (f(l) + f(l + n*h))/2;
+    for (int i = 0; i < n; i++) {
+        ld x = l + i*h;
+        res += f(x);
+    }
+    res *= h;
+    return res;
+}
 
-
+'''
 def simpson(func: Callable[[float], float], start: float, end: float, n: int) -> float:
     h = (end - start) / n
 
