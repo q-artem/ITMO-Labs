@@ -1,0 +1,44 @@
+ORG 0x010
+
+func: PUSHF
+PUSH
+
+LD &4
+ADD &3
+PUSH
+LD &5
+SUB &4
+PUSH
+LD &1
+SUB &0
+SUB &6
+SUB &5
+PUSH
+
+LD &3
+ST &7
+LD &5
+ST &6
+LD &4
+ST &5
+POP
+ST &3
+POP
+POP
+POP
+POP
+IRET
+
+ORG 0x040
+start: ST #0x0F
+PUSH 
+ST #0x0A
+PUSH
+CALL $func
+NOP
+ans: WORD 0x0000
+NOP
+ST ans
+HLT
+
+ORG 0x040
