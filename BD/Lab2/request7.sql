@@ -1,3 +1,5 @@
+--Сформировать запрос для получения числа на ФКТИУ хорошистов.
+
 SELECT COUNT(avg_rating)
 
 FROM (SELECT AVG(CAST("Н_ОЦЕНКИ"."КОД" AS INTEGER)) AS "avg_rating"
