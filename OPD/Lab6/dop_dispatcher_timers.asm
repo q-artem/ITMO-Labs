@@ -16,13 +16,15 @@ DEFAULT: IRET  ; Дефолтный вектор
 
   ; ;;;;;;;;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;;;;;;;
 
-START: NOP            ; Первоначальная постановка задач
+START: NOP
+       CALL start_clean_tasks
+       NOP            ; Первоначальная постановка задач
                       ;
        LD #0x0A       ; Таймер 1 секунда
        PUSH           ; Аргумент 2
        PUSH           ; Аргумент 1
        PUSH           ; Таймер 1 c
-       LD blink_byte
+       LD #0x26
        PUSH           ; Адрес задачи
        CALL add_task  ; добавили задачу
                       ;
@@ -42,7 +44,7 @@ loop0: CALL tick      ; обработка очереди
 
 flag_blink_byte: WORD 0x0000
 
-blink_byte: POP                 ; для примера помигаем раз в секунду ВУ 1
+blink_byte: POP                 ; для примера помигаем раз в секунду ВУ 1  адрес 0x26
             SWAP                ; убрали аргумент из стека
             POP
             SWAP
@@ -56,16 +58,33 @@ blink_byte: POP                 ; для примера помигаем раз 
             PUSH                ; Аргумент 2
             PUSH                ; Аргумент 1
             PUSH                ; Таймер 1 c
-            LD blink_byte
+            LD #0x26
             PUSH                ; Адрес задачи
             CALL add_task       ; добавили задачу
             RET
 
 
+  ; ;;;;;;;;;;;;;;;;;;;;;; FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;
+
+pointer_clean_tasks: WORD 0x0000  ; указатель на элемент очереди
+cntr_clean_tasks:    WORD ?       ; счётчик для цикла
+col_tasks:           WORD 0x0100  ; количество задач
+
+start_clean_tasks:      ; стартовая очистка области задач
+                   LD $start_queue_timers
+                   ST $pointer_clean_tasks
+                   LD col_tasks
+                   ST $cntr_clean_tasks
+                        ;
+                   CLA
+                   NOT
+loop_clean_tasks:  ST (pointer_clean_tasks)+
+                   LOOP $cntr_clean_tasks
+                   JUMP loop_clean_tasks
+                   RET
 
 
 
-                          ; ;;;;;;;;;;;;;;;;;;;;;; FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;
 cntr_add_task:    WORD ?  ; счётчик для цикла
 pointer_add_task: WORD ?  ; указатель на элемент очереди
 
@@ -77,7 +96,7 @@ add_task:                          ; Добавление задачи в оче
                                                ;
 loop_find_task:      LD (pointer_add_task)     ; Поиск места в очереди
                      AND mask_no_tasks         ; взяли старший полубайт
-                     BZC skip_add_task         ; если нуля нет, значит F, место занято - скип
+                     BZS skip_add_task         ; если ноль, значит место занято - скип
                                                ; Если место свободно
                      DI                        ; Чтобы ничего не сломалось из-за не полностью добавленной задачи - выключаем прерывания
                      LD &1                     ; загрузили адрес задачи
