@@ -43,7 +43,7 @@ def video_to_hex(input_video_path, output_hex_path):
 
         # Преобразуем в шестнадцатеричный формат (по столбцам, 8 пикселей = 1 байт)
         for x in range(target_width):
-            column_pixels = binary[:, x]  # Получаем столбец высотой 8 пикселей
+            column_pixels = binary[:, x][::-1]  # Получаем столбец высотой 8 пикселей
             byte = 0
             for y in range(target_height):
                 # Преобразуем пиксель в бит (0 или 1)
@@ -59,7 +59,7 @@ def video_to_hex(input_video_path, output_hex_path):
     with open(output_hex_path, 'w') as f:
         # Записываем построчно (например, по 10 байт на строку - по ширине кадра)
         for i in range(0, len(hex_data), target_width):
-            line = ' '.join(hex_data[i:i + target_width]) + '\n'
+            line = ' '.join(hex_data[i:i + target_width][::-1]) + '\n'
             f.write(line)
 
     print(f"HEX-данные сохранены в {output_hex_path}")
