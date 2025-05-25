@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS special_color CASCADE;
 DROP TABLE IF EXISTS texture CASCADE;
 DROP TABLE IF EXISTS material CASCADE;
 DROP TABLE IF EXISTS linguistic_form CASCADE;
-DROP TABLE IF EXISTS world_experts_in_linguistic_forms CASCADE;
+DROP TABLE IF EXISTS world_expert CASCADE;
 DROP TABLE IF EXISTS known_worlds CASCADE;
 DROP TABLE IF EXISTS forms_of_inscriptions CASCADE;
 DROP TABLE IF EXISTS contents_of_inscriptions CASCADE;
@@ -16,9 +16,10 @@ DROP TABLE IF EXISTS inscription CASCADE;
 DROP TABLE IF EXISTS figurine CASCADE;
 DROP TABLE IF EXISTS texture_to_special_color CASCADE;
 DROP TABLE IF EXISTS pattern_to_special_color CASCADE;
-DROP TABLE IF EXISTS linguistic_form_to_world_experts_in_linguistic_forms CASCADE;
+DROP TABLE IF EXISTS linguistic_form_to_world_expert CASCADE;
 DROP TABLE IF EXISTS property_to_lookses CASCADE;
-
+DROP TABLE IF EXISTS top_linguistic_experts CASCADE;
+DROP TRIGGER IF EXISTS trigger_update_expert_status ON linguistic_form_to_world_expert;
 
 -- 1
 CREATE TABLE color (
@@ -77,7 +78,7 @@ CREATE TABLE linguistic_form (
 );
 
 -- 8
-CREATE TABLE world_experts_in_linguistic_forms (
+CREATE TABLE world_expert (
                                                    id SERIAL PRIMARY KEY,
                                                    name TEXT NOT NULL,
                                                    surname TEXT NOT NULL,
@@ -159,10 +160,10 @@ CREATE TABLE pattern_to_special_color (
 );
 
 -- 19
-CREATE TABLE linguistic_form_to_world_experts_in_linguistic_forms (
+CREATE TABLE linguistic_form_to_world_expert (
                                                                       linguistic_form_id INTEGER REFERENCES linguistic_form(id),
-                                                                      world_experts_in_linguistic_forms_id INTEGER REFERENCES world_experts_in_linguistic_forms(id),
-                                                                      PRIMARY KEY (linguistic_form_id, world_experts_in_linguistic_forms_id)
+                                                                      world_expert_id INTEGER REFERENCES world_expert(id),
+                                                                      PRIMARY KEY (linguistic_form_id, world_expert_id)
 );
 
 -- 20
@@ -194,15 +195,15 @@ INSERT INTO linguistic_form (name, county) VALUES (NULL, NULL);
 INSERT INTO linguistic_form (name, county) VALUES ('Иероглифическая', 'Китай');
 INSERT INTO linguistic_form (name, county) VALUES ('Кириллическая', 'Старославянское царство');
 
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Иван', 'Петров', 'Россия', TRUE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Emily', 'Johnson', 'USA', TRUE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Дмитрий', 'Преображенский', 'Россия', TRUE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Екатерина', 'Кузнецова', 'Казахстан', TRUE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Daniel', 'Wilson', 'Italy', TRUE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Olivia', 'Martinez', 'India', FALSE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Maria', 'Soker', 'Japan', FALSE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('James', 'Clark', 'Mexica', FALSE);
-INSERT INTO world_experts_in_linguistic_forms (name, surname, county, is_at_the_congress) VALUES ('Ava', 'Anderson', 'Brasilia', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Иван', 'Петров', 'Россия', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Emily', 'Johnson', 'USA', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Дмитрий', 'Преображенский', 'Россия', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Екатерина', 'Кузнецова', 'Казахстан', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Daniel', 'Wilson', 'Italy', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Olivia', 'Martinez', 'India', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Maria', 'Soker', 'Japan', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('James', 'Clark', 'Mexica', FALSE);
+INSERT INTO world_expert (name, surname, county, is_at_the_congress) VALUES ('Ava', 'Anderson', 'Brasilia', FALSE);
 
 INSERT INTO known_worlds (name) VALUES (NULL);
 INSERT INTO known_worlds (name) VALUES ('Человечество');
@@ -229,19 +230,20 @@ INSERT INTO texture_to_special_color (texture_id, special_color_id) VALUES (1, 4
 INSERT INTO pattern_to_special_color (pattern_id, special_color_id) VALUES (1, 1);
 INSERT INTO pattern_to_special_color (pattern_id, special_color_id) VALUES (1, 2);
 
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 1);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (3, 1);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 3);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 2);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (3, 4);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 9);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (3, 5);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 5);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 7);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (3, 8);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 8);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (3, 6);
-INSERT INTO linguistic_form_to_world_experts_in_linguistic_forms (linguistic_form_id, world_experts_in_linguistic_forms_id) VALUES (2, 6);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 1);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (3, 1);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 3);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 2);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (3, 4);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 9);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (3, 5);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 5);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 7);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (3, 8);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 8);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (3, 6);
+INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id) VALUES (2, 6);
 
 INSERT INTO property_to_lookses (property_id, lookses_id) VALUES (1, 1);
 INSERT INTO property_to_lookses (property_id, lookses_id) VALUES (2, 1);
+SELECT * FROM world_expert
