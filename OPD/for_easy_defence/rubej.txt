@@ -1,0 +1,159 @@
+
+
+
+; воркает
+ADD32_A_L: WORD 0x7FFF
+ADD32_A_H: WORD 0x0002  ; Тестовые данные
+ADD32_B_L: WORD 0x0001
+ADD32_B_H: WORD 0x0100
+ADD32_R_L: WORD ?
+ADD32_R_H: WORD ?
+ADD32: NOP ; А+B
+       LD ADD32_A_L
+       ADD ADD32_B_L
+       ST ADD32_R_L
+       LD ADD32_A_H
+       ADC ADD32_B_H
+       ST ADD32_R_H
+       RET
+
+
+
+; воркает
+S_M: WORD 0x1000 ; маска знака  0001.0000.0000.0000
+T_M: WORD 0xE000 ; маска мусора 1110.0000.0000.0000
+D_M: WORD 0x1FFF ; маска числа  0001.1111.1111.1111
+SIGN_13_16_A: WORD 0x11DF  ; Тестовые данные
+SIGN_13_16_R: WORD ?
+SIGN_13_16: NOP ; расширение знака с 13 до 16
+            LD SIGN_13_16_A
+            AND S_M
+            BZS skip_m           ; sero set - если 0 - число положтельное - скип
+            LD SIGN_13_16_A      ; если не 0 - отрицательное - заменили мусор нулями
+            OR T_M
+            ST SIGN_13_16_R
+            RET
+skip_m:     LD SIGN_13_16_A
+            AND D_M              ; убрали мусор
+            ST SIGN_13_16_R
+            RET
+
+
+
+
+
+; воркает
+ALL_F: WORD 0xFFFF ; все F 1111.1111.1111.1111
+SIGN_16_32_A: WORD 0x91DF  ; Тестовые данные
+SIGN_16_32_R_L: WORD ?
+SIGN_16_32_R_H: WORD ?
+SIGN_16_32: NOP ; расширение знака с 16 до 32
+            LD SIGN_16_32_A
+            BLT skip_n; если меньше 0
+            ST SIGN_16_32_R_L ; если 0 или больше
+            LD #0x00
+            ST SIGN_16_32_R_H
+            RET
+skip_n:     LD SIGN_16_32_A
+            ST SIGN_16_32_R_L
+            LD ALL_F
+            ST SIGN_16_32_R_H
+            RET
+            
+
+
+CONST_32_L: WORD 0x091D  ; константа 2333
+CONST_32_H: WORD 0x0000
+CONST_MULT: WORD 0x000D  ; константа для умножения 13
+LOOP_CNTR: WORD 0x0010   ; счётчик цикла == 16 элементов в массиве
+IN_POINTER: WORD 0x6D3   ; указатель на начало входного массива
+OUT_POINTER: WORD 0x400  ; указатель на начало выходного массива
+
+START:
+;CALL ADD32
+;CALL SIGN_13_16
+;CALL SIGN_16_32
+loop_1:                  ; цикл на 16 элементов массива
+
+LD (IN_POINTER)          ; загрузка элемнта по адресу указателя
+
+ST SIGN_13_16_A          ; расширили знак до 16
+CALL SIGN_13_16
+LD SIGN_13_16_R
+
+ST SIGN_16_32_A          ; до 32
+CALL SIGN_16_32
+;SIGN_16_32_R_L          ;результат тут
+;SIGN_16_32_R_H
+
+loop_cntr1: WORD ?       ; счётчик цикла
+LD CONST_MULT            ; записали 13
+ST loop_cntr1
+
+CLA
+LD SIGN_16_32_R_L        ; записали в А число в В ноль
+ST ADD32_B_L
+LD SIGN_16_32_R_H
+ST ADD32_B_H
+LD #0x00
+ST ADD32_A_L
+LD #0x00
+ST ADD32_A_H
+
+loop_s:                  ; прогнали 13 раз 
+CALL ADD32
+LD ADD32_R_L
+ST ADD32_A_L
+LD ADD32_R_H
+ST ADD32_A_H
+LOOP loop_cntr1          ; цикл 
+JUMP loop_s
+
+
+
+LD ADD32_R_L
+ST ADD32_A_L
+LD ADD32_R_H
+ST ADD32_A_H
+
+LD CONST_32_L             ; добавили константу
+ST ADD32_B_L
+LD CONST_32_H
+ST ADD32_B_H
+
+CALL ADD32
+
+
+
+
+LD ADD32_R_L             ; записали ответ
+ST (OUT_POINTER)
+
+LD OUT_POINTER
+INC
+ST OUT_POINTER
+
+LD ADD32_R_H
+ST (OUT_POINTER)
+
+LD OUT_POINTER           ; костыль :)
+DEC
+ST OUT_POINTER
+
+
+
+
+
+LD IN_POINTER       ; инкремент счётчика входного массива на +1
+INC
+ST IN_POINTER
+
+
+LD OUT_POINTER      ; инкремент счётчика выходного массива на +2
+INC
+INC
+ST OUT_POINTER
+
+LOOP LOOP_CNTR
+JUMP loop_1
+HLT                 ; стоп
