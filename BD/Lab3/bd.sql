@@ -173,6 +173,75 @@ CREATE TABLE property_to_lookses (
                                      PRIMARY KEY (property_id, lookses_id)
 );
 
+-- Таблица для отслеживания топовых экспертов
+-- Таблица для отслеживания топовых экспертов
+CREATE TABLE top_linguistic_experts (
+                                        expert_id INT PRIMARY KEY,
+                                        form_count INT NOT NULL,
+                                        last_activity TIMESTAMP NOT NULL
+);
+
+-- Триггерная функция для обновления статуса экспертов
+CREATE OR REPLACE FUNCTION update_expert_status()
+    RETURNS TRIGGER AS $$
+DECLARE
+    current_form_count INT;
+    expert_in_top BOOLEAN;
+BEGIN
+    -- Получаем текущее количество форм для эксперта
+    SELECT COUNT(*) INTO current_form_count
+    FROM linguistic_form_to_world_expert
+    WHERE world_expert_id = NEW.world_expert_id;
+
+    -- Проверяем, есть ли эксперт уже в топе
+    SELECT EXISTS (
+        SELECT 1 FROM top_linguistic_experts
+        WHERE expert_id = NEW.world_expert_id
+    ) INTO expert_in_top;
+
+    -- Если эксперт имеет 2+ форм и не в топе - добавляем
+    IF current_form_count >= 2 AND NOT expert_in_top THEN
+        -- Добавляем эксперта в топ
+        INSERT INTO top_linguistic_experts (expert_id, form_count, last_activity)
+        VALUES (NEW.world_expert_id, current_form_count, NOW());
+
+        -- Приглашаем эксперта на конгресс (если еще не приглашен)
+        UPDATE world_expert
+        SET is_at_the_congress = TRUE
+        WHERE id = NEW.world_expert_id
+          AND is_at_the_congress = FALSE;
+
+        RAISE NOTICE 'Эксперт id=% добавлен в топ и приглашен на конгресс', NEW.world_expert_id;
+
+        -- Если эксперт в топе - просто обновляем счетчик
+    ELSIF expert_in_top THEN
+        UPDATE top_linguistic_experts
+        SET form_count = current_form_count, last_activity = NOW()
+        WHERE expert_id = NEW.world_expert_id;
+    END IF;
+
+    -- Если топ превысил 10 экспертов, удаляем того, у кого меньше всего форм (но оставляем на конгрессе)
+    IF (SELECT COUNT(*) FROM top_linguistic_experts) > 10 THEN
+        DELETE FROM top_linguistic_experts
+        WHERE expert_id IN (
+            SELECT expert_id FROM top_linguistic_experts
+            ORDER BY form_count ASC, last_activity ASC
+            LIMIT 1
+        );
+
+        RAISE NOTICE 'Эксперт удален из топа (но остается на конгрессе)';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Создаем триггер
+CREATE TRIGGER trigger_update_expert_status
+    AFTER INSERT OR UPDATE ON linguistic_form_to_world_expert
+    FOR EACH ROW
+EXECUTE FUNCTION update_expert_status();
+
 INSERT INTO color (name, channel_R, channel_G, channel_B) VALUES ('Зеленовато-чёрный', 17, 31, 13);
 INSERT INTO color (name, channel_R, channel_G, channel_B) VALUES ('Зеленый', 0, 255, 0);
 INSERT INTO color (name, channel_R, channel_G, channel_B) VALUES ('Красный', 255, 0, 0);
