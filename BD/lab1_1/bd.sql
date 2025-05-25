@@ -18,8 +18,6 @@ DROP TABLE IF EXISTS texture_to_special_color CASCADE;
 DROP TABLE IF EXISTS pattern_to_special_color CASCADE;
 DROP TABLE IF EXISTS linguistic_form_to_world_expert CASCADE;
 DROP TABLE IF EXISTS property_to_lookses CASCADE;
-DROP TABLE IF EXISTS top_linguistic_experts CASCADE;
-DROP TRIGGER IF EXISTS trigger_update_expert_status ON linguistic_form_to_world_expert;
 
 -- 1
 CREATE TABLE color (
@@ -246,4 +244,3 @@ INSERT INTO linguistic_form_to_world_expert (linguistic_form_id, world_expert_id
 
 INSERT INTO property_to_lookses (property_id, lookses_id) VALUES (1, 1);
 INSERT INTO property_to_lookses (property_id, lookses_id) VALUES (2, 1);
-SELECT * FROM world_expert
