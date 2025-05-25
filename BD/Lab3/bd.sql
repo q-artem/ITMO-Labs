@@ -174,7 +174,6 @@ CREATE TABLE property_to_lookses (
 );
 
 -- Таблица для отслеживания топовых экспертов
--- Таблица для отслеживания топовых экспертов
 CREATE TABLE top_linguistic_experts (
                                         expert_id INT PRIMARY KEY,
                                         form_count INT NOT NULL,
@@ -188,40 +187,34 @@ DECLARE
     current_form_count INT;
     expert_in_top BOOLEAN;
 BEGIN
-    -- Получаем текущее количество форм для эксперта
-    SELECT COUNT(*) INTO current_form_count
+    SELECT COUNT(*) INTO current_form_count  -- Получаем количество форм известных эксперту
     FROM linguistic_form_to_world_expert
     WHERE world_expert_id = NEW.world_expert_id;
 
-    -- Проверяем, есть ли эксперт уже в топе
-    SELECT EXISTS (
+    SELECT EXISTS (  -- Проверяем, есть ли эксперт в топе
         SELECT 1 FROM top_linguistic_experts
         WHERE expert_id = NEW.world_expert_id
     ) INTO expert_in_top;
 
-    -- Если эксперт имеет 2+ форм и не в топе - добавляем
-    IF current_form_count >= 2 AND NOT expert_in_top THEN
-        -- Добавляем эксперта в топ
+    IF current_form_count >= 2 AND NOT expert_in_top THEN  -- Если эксперт знает 2+ форм и не в топе - добавляем
         INSERT INTO top_linguistic_experts (expert_id, form_count, last_activity)
         VALUES (NEW.world_expert_id, current_form_count, NOW());
 
-        -- Приглашаем эксперта на конгресс (если еще не приглашен)
-        UPDATE world_expert
+        UPDATE world_expert -- Если эксперт не на конгрессе - добавляем
         SET is_at_the_congress = TRUE
         WHERE id = NEW.world_expert_id
           AND is_at_the_congress = FALSE;
 
         RAISE NOTICE 'Эксперт id=% добавлен в топ и приглашен на конгресс', NEW.world_expert_id;
 
-        -- Если эксперт в топе - просто обновляем счетчик
-    ELSIF expert_in_top THEN
+    ELSIF expert_in_top THEN  -- Если эксперт в топе просто обновляем счетчик
         UPDATE top_linguistic_experts
         SET form_count = current_form_count, last_activity = NOW()
         WHERE expert_id = NEW.world_expert_id;
     END IF;
 
-    -- Если топ превысил 10 экспертов, удаляем того, у кого меньше всего форм (но оставляем на конгрессе)
-    IF (SELECT COUNT(*) FROM top_linguistic_experts) > 10 THEN
+    -- Если в топе больше 5 экспертов, сортируем по формам и времени активности и удаляем последнего
+    IF (SELECT COUNT(*) FROM top_linguistic_experts) > 5 THEN
         DELETE FROM top_linguistic_experts
         WHERE expert_id IN (
             SELECT expert_id FROM top_linguistic_experts
@@ -229,14 +222,14 @@ BEGIN
             LIMIT 1
         );
 
-        RAISE NOTICE 'Эксперт удален из топа (но остается на конгрессе)';
+        RAISE NOTICE 'Эксперт удален из топа';
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Создаем триггер
+-- Триггер по вставке или обновлению
 CREATE TRIGGER trigger_update_expert_status
     AFTER INSERT OR UPDATE ON linguistic_form_to_world_expert
     FOR EACH ROW
