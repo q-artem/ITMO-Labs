@@ -1,0 +1,12 @@
+https://m.vk.com/@dim0n4eg-laboratornye-5-8-po-programmirovaniu-ili-kak-sekonomit-10k
+https://youtu.be/uP7gbMLYAUY?si=O9S5TLgJeprGk9DC
+https://docs.google.com/presentation/d/16MfbYn3uSljHb9FsQkLGQ4hAJhUwfD5cnQEVNGKxdFU/edit?usp=sharing
+Вот это, наверное, пример для подражания https://github.com/ScriptorBitis/Lab_5_gradle
+
+Вопросы:
+1. Как устроена HashMap? (Не рассказал только про loadFactor)
++ Ко, контр и ин вариантность
++ PECS
++ Type Erasure
++ Reified типы
+- Buffer. allocate & allocateDirect
