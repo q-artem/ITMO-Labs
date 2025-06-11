@@ -104,7 +104,6 @@ INT_2: NOP           ; подсчёт исключающего ИЛИ-НЕ и з
        LD (X)        ; загружаем X в AC
        PUSH
        NOP           ; Breakpoint-2-1
-       CLA
        IN 0x04
        SXTB
        PUSH
@@ -113,7 +112,7 @@ INT_2: NOP           ; подсчёт исключающего ИЛИ-НЕ и з
        POP
        NOP           ; Breakpoint-2-3
                      ; AND #0xFF  ; обрежем мусор почему не работает?
-       AND mask      ; обрежем мусор
+       ;AND mask      ; обрежем мусор
        CALL clamp_var
        ST (X)
        NOP           ; Breakpoint-2-4
