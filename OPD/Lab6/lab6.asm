@@ -84,19 +84,24 @@ not_xor: NOP         ; исключающее ИЛИ-НЕ (00-1, 01-0, 10-0, 11-
 
                             ; прерывание по ВУ-1
 INT_1: NOP                  ; подсчёт функции и вывод на ВУ-1
+       PUSH
        LD (X)               ; загружаем X в AC
        PUSH
        CALL calculate_func  ; Подсчёт функции
        POP
        CALL clamp_var
        OUT 0x02             ; вывод на ВУ-1
+       POP
        IRET
 
 mask:  WORD 0x00FF   ; прерывание по ВУ-2
 INT_2: NOP           ; подсчёт исключающего ИЛИ-НЕ и запись в X
+       PUSH
        LD (X)        ; загружаем X в AC
        PUSH
+       CLA
        IN 0x04
+       SXTB
        PUSH
        CALL not_xor  ; Подсчёт исключающего ИЛИ-НЕ
        POP
@@ -104,4 +109,5 @@ INT_2: NOP           ; подсчёт исключающего ИЛИ-НЕ и з
        AND mask      ; обрежем мусор
        CALL clamp_var
        ST (X)
+       POP
        IRET
