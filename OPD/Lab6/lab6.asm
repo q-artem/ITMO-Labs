@@ -69,6 +69,7 @@ loop1:          ADD &1     ; сложили в цикле
 buffer:  WORD ?      ; ;                                             1       2     3     4     5
 not_xor: NOP         ; исключающее ИЛИ-НЕ (00-1, 01-0, 10-0, 11-1) (not ((a or b) and (not (a and b))))
          LD &1
+         NOP         ; Breakpoint
          AND &2      ; 5
          NOT         ; 4
          ST buffer
@@ -84,24 +85,36 @@ not_xor: NOP         ; исключающее ИЛИ-НЕ (00-1, 01-0, 10-0, 11-
 
                             ; прерывание по ВУ-1
 INT_1: NOP                  ; подсчёт функции и вывод на ВУ-1
+       PUSH
        LD (X)               ; загружаем X в AC
        PUSH
+       NOP                  ; Breakpoint-1-1
        CALL calculate_func  ; Подсчёт функции
        POP
+       NOP                  ; Breakpoint-1-2
        CALL clamp_var
        OUT 0x02             ; вывод на ВУ-1
+       NOP                  ; Breakpoint-1-3
+       POP
        IRET
 
 mask:  WORD 0x00FF   ; прерывание по ВУ-2
 INT_2: NOP           ; подсчёт исключающего ИЛИ-НЕ и запись в X
+       PUSH
        LD (X)        ; загружаем X в AC
        PUSH
+       NOP           ; Breakpoint-2-1
        IN 0x04
+       SXTB
        PUSH
+       NOP           ; Breakpoint-2-2
        CALL not_xor  ; Подсчёт исключающего ИЛИ-НЕ
        POP
+       NOP           ; Breakpoint-2-3
                      ; AND #0xFF  ; обрежем мусор почему не работает?
-       AND mask      ; обрежем мусор
+       ;AND mask      ; обрежем мусор
        CALL clamp_var
        ST (X)
+       NOP           ; Breakpoint-2-4
+       POP
        IRET
