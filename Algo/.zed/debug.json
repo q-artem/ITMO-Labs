@@ -1,0 +1,16 @@
+[
+  {
+    "label": "Debug current algorithm",
+    "build": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "clang++ -g -std=c++20 \"$ZED_FILE\" -o \"$ZED_WORKTREE_ROOT/debug_bin\" && cp \"$(dirname \"$ZED_FILE\")/input.txt\" \"$ZED_WORKTREE_ROOT/input.txt\"",
+      ],
+      "cwd": "${ZED_WORKTREE_ROOT}",
+    },
+    "program": "${ZED_WORKTREE_ROOT}/debug_bin",
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+]

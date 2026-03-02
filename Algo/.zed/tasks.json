@@ -1,0 +1,10 @@
+[
+  {
+    "label": "C++: Build for Debug",
+    "command": "clang++ -g -std=c++20 ${ZED_FILE} -o ${ZED_WORKTREE_ROOT}/debug_bin",
+  },
+  {
+    "label": "C++: Build and Run",
+    "command": "cd $(dirname \"$ZED_FILE\") && clang-format -i ${ZED_FILE} && clang++ -std=c++20 -Wall -O2 ${ZED_FILE} -o main && ./main",
+  },
+]
