@@ -12,7 +12,6 @@ int main() {
   std::cin >> s;
   n = s.size();
   std::vector<char> stack(n + 2);
-  std::vector<int> indexes(n + 2);
   std::vector<int> ordinal_number(n + 2);
   std::vector<int> answer(n / 2 + 2);
 
@@ -40,7 +39,6 @@ int main() {
 
     } else {
       stack[pointer] = s[i];
-      indexes[pointer] = i;
       ordinal_number[pointer] = curr_id;
       pointer++;
     }
